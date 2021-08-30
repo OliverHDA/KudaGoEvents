@@ -9,6 +9,8 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import ru.oliverhd.kudagoevents.categorieslist.CategoriesListFragment
 import ru.oliverhd.kudagoevents.di.modules.ContributesAndroidInjectorModule
+import ru.oliverhd.kudagoevents.di.modules.DataSourceModule
+import ru.oliverhd.kudagoevents.di.modules.KudaGoApiModule
 import ru.oliverhd.kudagoevents.di.modules.RepositoryModule
 import ru.oliverhd.kudagoevents.main.App
 import javax.inject.Singleton
@@ -18,6 +20,8 @@ import javax.inject.Singleton
     modules = [
         AndroidInjectionModule::class,
         ContributesAndroidInjectorModule::class,
+        DataSourceModule::class,
+        KudaGoApiModule::class,
         RepositoryModule::class
     ]
 )

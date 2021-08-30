@@ -1,7 +1,9 @@
 package ru.oliverhd.kudagoevents.categorieslist
 
 import com.github.terrakok.cicerone.Router
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import moxy.MvpPresenter
 import ru.oliverhd.kudagoevents.eventslist.EventsListScreen
 import ru.oliverhd.kudagoevents.repository.EventCategory
@@ -18,7 +20,9 @@ class CategoriesListPresenter(
         super.onFirstViewAttach()
         disposables.add(
             repository
-                .getLocalCategoriesList()
+                .getRemoteCategoriesList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
                 .subscribe(viewState::show, viewState::error)
         )
     }
