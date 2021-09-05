@@ -2,7 +2,7 @@ package ru.oliverhd.kudagoevents.categorieslist
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
-import ru.oliverhd.kudagoevents.repository.EventCategory
+import ru.oliverhd.kudagoevents.model.EventCategory
 
 object CategoryDiff : DiffUtil.ItemCallback<EventCategory>() {
 

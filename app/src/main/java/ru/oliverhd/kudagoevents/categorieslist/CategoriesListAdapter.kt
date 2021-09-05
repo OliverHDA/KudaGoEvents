@@ -9,14 +9,14 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.oliverhd.kudagoevents.R
 import ru.oliverhd.kudagoevents.categorieslist.CategoriesListAdapter.CategoriesListViewHolder
 import ru.oliverhd.kudagoevents.databinding.CategoriesListItemBinding
-import ru.oliverhd.kudagoevents.repository.EventCategory
+import ru.oliverhd.kudagoevents.model.EventCategory
 
 class CategoriesListAdapter(
     private val delegate: Delegate?
 ) : ListAdapter<EventCategory, CategoriesListViewHolder>(CategoryDiff) {
 
     interface Delegate {
-        fun onEventClicked(category: EventCategory)
+        fun onCategoryClicked(category: EventCategory)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesListViewHolder =
@@ -37,7 +37,7 @@ class CategoriesListAdapter(
             with(viewBinding) {
                 categoriesListItemTextView.text = category.name
                 categoriesListItemTextView.setOnClickListener {
-                    delegate?.onEventClicked(category)
+                    delegate?.onCategoryClicked(category)
                 }
             }
         }

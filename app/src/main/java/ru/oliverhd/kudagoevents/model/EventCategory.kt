@@ -1,4 +1,4 @@
-package ru.oliverhd.kudagoevents.repository
+package ru.oliverhd.kudagoevents.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
