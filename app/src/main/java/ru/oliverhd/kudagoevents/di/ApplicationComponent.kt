@@ -7,12 +7,9 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
-import ru.oliverhd.kudagoevents.categorieslist.CategoriesListFragment
-import ru.oliverhd.kudagoevents.di.modules.ContributesAndroidInjectorModule
-import ru.oliverhd.kudagoevents.di.modules.DataSourceModule
-import ru.oliverhd.kudagoevents.di.modules.KudaGoApiModule
-import ru.oliverhd.kudagoevents.di.modules.RepositoryModule
+import ru.oliverhd.kudagoevents.di.modules.*
 import ru.oliverhd.kudagoevents.main.App
+import ru.oliverhd.kudagoevents.scheduler.Schedulers
 import javax.inject.Singleton
 
 @Singleton
@@ -22,12 +19,11 @@ import javax.inject.Singleton
         ContributesAndroidInjectorModule::class,
         DataSourceModule::class,
         KudaGoApiModule::class,
-        RepositoryModule::class
+        RepositoryModule::class,
+        KudaGoStorageModule::class
     ]
 )
 interface ApplicationComponent : AndroidInjector<App> {
-
-    fun inject(categoriesListFragment : CategoriesListFragment)
 
     @Component.Builder
     interface Builder {
@@ -40,6 +36,9 @@ interface ApplicationComponent : AndroidInjector<App> {
 
         @BindsInstance
         fun withRouter(router: Router): Builder
+
+        @BindsInstance
+        fun withSchedulers(schedulers: Schedulers): Builder
 
         fun build(): ApplicationComponent
     }

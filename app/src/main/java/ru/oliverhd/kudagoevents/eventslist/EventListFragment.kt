@@ -1,4 +1,4 @@
-package ru.oliverhd.kudagoevents.event
+package ru.oliverhd.kudagoevents.eventslist
 
 import android.content.Context
 import android.os.Bundle
@@ -11,20 +11,19 @@ import com.github.terrakok.cicerone.Router
 import dagger.android.support.AndroidSupportInjection
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import ru.oliverhd.kudagoevents.R
-import ru.oliverhd.kudagoevents.databinding.FragmentEventBinding
+import ru.oliverhd.kudagoevents.databinding.FragmentEventsListBinding
+import ru.oliverhd.kudagoevents.model.EventCategory
 import ru.oliverhd.kudagoevents.model.KudaGoEvent
-import ru.oliverhd.kudagoevents.model.Place
 import ru.oliverhd.kudagoevents.repository.Repository
 import ru.oliverhd.kudagoevents.scheduler.Schedulers
 import javax.inject.Inject
 
-private const val ARG_EVENT_ID = "eventID"
+private const val ARG_CATEGORY = "category"
 
-class EventFragment : MvpAppCompatFragment(), EventView {
+class EventListFragment : MvpAppCompatFragment(), EventListView, EventListAdapter.Delegate {
 
-    private val eventID by lazy {
-        arguments?.getInt(ARG_EVENT_ID) as Int
+    private val category: EventCategory by lazy {
+        arguments?.getParcelable<EventCategory>(ARG_CATEGORY) as EventCategory
     }
 
     @Inject
@@ -36,20 +35,20 @@ class EventFragment : MvpAppCompatFragment(), EventView {
     @Inject
     lateinit var schedulers: Schedulers
 
-//    private val viewBinding: FragmentEventBinding by viewBinding()
-
-    private var binding: FragmentEventBinding? = null
-
-    private val eventImageAdapter = EventImageAdapter()
+    private val eventListAdapter = EventListAdapter(delegate = this)
 
     private val presenter by moxyPresenter {
-        EventPresenter(
+        EventListPresenter(
             repository,
             router,
             schedulers,
-            eventID
+            category
         )
     }
+
+    private var binding: FragmentEventsListBinding? = null
+
+//    private val viewBinding: FragmentEventsListBinding by viewBinding()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -61,40 +60,34 @@ class EventFragment : MvpAppCompatFragment(), EventView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) =
-        FragmentEventBinding.inflate(inflater, container, false).also {
+        FragmentEventsListBinding.inflate(inflater, container, false).also {
             binding = it
         }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.eventImageRecyclerView?.adapter = eventImageAdapter
+        binding?.eventsListRecyclerView?.adapter = eventListAdapter
     }
 
-    override fun showEvent(event: KudaGoEvent) {
-        eventImageAdapter.submitList(event.images)
-        binding?.eventTitle?.text = event.title
-        if (event.isFree) {
-            binding?.eventPrice?.text = getString(R.string.free)
-        } else {
-            binding?.eventPrice?.text = event.price
-        }
-        binding?.eventDescription?.text = event.description
-    }
-
-    override fun showPlace(place: Place) {
-        binding?.eventPlace?.text = place.title
-        binding?.eventAddress?.text = place.address
+    override fun show(eventList: List<KudaGoEvent>) {
+        eventListAdapter.submitList(eventList)
+//        binding?.eventsListRecyclerView?.layoutManager = GridLayoutManager(context,2)
+//            LinearLayoutManager(context)
     }
 
     override fun error(e: Throwable) {
         Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun onEventClicked(event: KudaGoEvent) {
+        presenter.showEventDetail(event)
+    }
+
     companion object {
 
-        fun newInstance(eventId: Int) =
-            EventFragment().apply {
-                arguments = bundleOf(ARG_EVENT_ID to eventId)
+        fun newInstance(category: EventCategory) =
+            EventListFragment().apply {
+                arguments = bundleOf(ARG_CATEGORY to category)
             }
     }
 }
