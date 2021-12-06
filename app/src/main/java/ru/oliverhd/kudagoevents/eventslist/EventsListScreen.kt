@@ -1,7 +1,7 @@
 package ru.oliverhd.kudagoevents.eventslist
 
 import com.github.terrakok.cicerone.androidx.FragmentScreen
-import ru.oliverhd.kudagoevents.repository.EventCategory
+import ru.oliverhd.kudagoevents.model.EventCategory
 
 class EventsListScreen(private val category: EventCategory) {
 
